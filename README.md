@@ -2,7 +2,7 @@
 > ANSI-C compiler written in C++20 supporting basic C code.
 ## Work in progress 🔬:
 - ### Lexical analysis
-	- 🔴 Regular expression implementation 🔤
+	- 🟢 Regular expression implementation 🔤
 	- 🔴 Lexer engine and tokenization 🗃️
 - ### Parser:
 	- 🔴 Abstract system tree, the node structure 🌳
