@@ -1,10 +1,14 @@
-#ifndef CCC_TYPE_HPP
-#define CCC_TYPE_HPP
+#ifndef CCC_SCALAR_TYPES_HPP
+#define CCC_SCALAR_TYPES_HPP
 
 #include <cstddef>
 #include <cstdint>
 
 namespace ccc {
+
+constexpr auto npos() -> size_t {
+  return static_cast<size_t>(-1);
+}
 
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;
@@ -19,6 +23,6 @@ using i64 = std::int64_t;
 using f32 = float;
 using f64 = double;
 
-} // namespace ccc
+}  // namespace ccc
 
 #endif

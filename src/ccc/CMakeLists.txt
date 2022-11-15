@@ -5,7 +5,7 @@ file(
 )
 
 add_library(
-  ccc SHARED
+  ccc STATIC
   ${CCC_SOURCE}
 )
 
@@ -15,7 +15,7 @@ target_include_directories(
 )
 
 target_link_libraries(
-  ccc PRIVATE
+  ccc PUBLIC
   fmt::fmt
   magic_enum::magic_enum
 )
