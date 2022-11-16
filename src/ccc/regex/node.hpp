@@ -36,20 +36,20 @@ public:
     return *m_edges.insert(&edge).first;
   }
 
-  auto breadth() const -> u64 {
+  auto breadth() const -> size_t {
     return m_edges.size();
   }
 
-  auto deepest_member() const -> const Node * {
+  auto deepest_edge() const -> const Node * {
     return breadth() > 0 ? *m_edges.rbegin() : nullptr;
   }
 
   auto branch() const -> bool {
-    return breadth() > 0 && deepest_member()->index() > m_index;
+    return breadth() > 0 && deepest_edge()->index() > m_index;
   }
 
   auto ok() const -> bool {
-    return m_state.type() != Type::Any && !branch();
+    return m_state.ok() && !branch();
   }
 
 private:

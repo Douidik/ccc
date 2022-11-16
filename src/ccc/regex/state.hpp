@@ -27,6 +27,10 @@ public:
     return m_data;
   }
 
+  auto ok() const -> bool {
+    return m_type != Type::Any;
+  }
+  
 private:
   std::string_view m_data;
   Type m_type;

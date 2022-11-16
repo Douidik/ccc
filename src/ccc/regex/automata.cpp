@@ -13,6 +13,7 @@ auto Automata::merge(const Automata &automata, Node::MutSet owners, Node::Set ed
   -> const Node * {
   std::map<const Node *, Node *, Node::Cmp> map {};
 
+  // Merge nodes and link edges with outer-nodes
   for (const Node &node : automata.nodes()) {
     if (node.branch())
       map.emplace(&node, &push(node.state(), {}, {}));
@@ -20,12 +21,14 @@ auto Automata::merge(const Automata &automata, Node::MutSet owners, Node::Set ed
       map.emplace(&node, &push(node.state(), {}, edges));
   }
 
+  // Remake inner connections
   for (const auto [node, merged] : map) {
     for (const Node *edge : node->edges()) {
       merged->push(*map[edge]);
     }
   }
 
+  // Link merged root with given owners
   if (!map.empty()) {
     const Node *root = map[automata.root()];
 

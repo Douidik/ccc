@@ -80,6 +80,7 @@ auto Parser::parse_new_token() -> size_t {
   }
   }
 
+  // Pop top-level empty automatas
   while (!m_stack.empty() && stack_top().empty()) {
     stack_pop();
   }

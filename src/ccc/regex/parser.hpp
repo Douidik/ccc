@@ -42,8 +42,6 @@ private:
     return m_stack.back();
   }
 
-  void stack_pop_empty();
-
   const char *m_token;
   std::string_view m_source;
   std::vector<Automata> m_stack;

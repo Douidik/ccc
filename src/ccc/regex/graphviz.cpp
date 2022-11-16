@@ -8,7 +8,7 @@ constexpr std::string_view CREDITS =
 # <?> Error
 # <$> Epsilon state
 # <^> Any state
-# 'abc' Text
+# '...' Text
 # [a..b] Range
 
 )";
