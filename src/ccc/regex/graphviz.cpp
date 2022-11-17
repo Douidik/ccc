@@ -14,16 +14,26 @@ constexpr std::string_view CREDITS =
 
 )";
 
-Graphviz::Graphviz(const Regex &regex) : m_regex(regex) {
+Graphviz::Graphviz(const Regex &regex, GraphvizOption options, std::string_view name) :
+  m_regex(regex),
+  m_options(options),
+  m_name(name != "" ? name : regex.source()) {
   write_graph();
 }
 
 void Graphviz::write_graph() {
-  write(CREDITS);
-  write("digraph regex {{\n");
+  if (m_options & GraphvizCredits) {
+    write(CREDITS);
+  }
+
+  if (m_options & GraphvizCluster) {
+    write("subgraph regex {{\n");
+  } else {
+    write("digraph regex {{\n");
+  }
 
   if (!automata().empty()) {
-    write_shapes();
+    write_attributes();
     write_start();
     write_edges();
   }
@@ -33,15 +43,20 @@ void Graphviz::write_graph() {
 
 void Graphviz::write_start() {
   write("  rankdir = LR;\n");
-  write("  start [shape = none];\n");
-  write("  start -> 0 [label = \"{}\"];\n", automata().root()->state());
+  write("  \"{}\" [shape = none];\n", FmtEscaped {m_name});
+  write("  \"{}\" -> 0 [label = \"{}\"];\n", FmtEscaped {m_name}, automata().root()->state());
 }
 
-void Graphviz::write_shapes() {
+void Graphviz::write_attributes() {
   constexpr std::string_view SHAPE_FMT = "  {} [shape = {}];\n";
-  
+  constexpr std::string_view ANON_FMT = "  {} [label = \"\"];\n";
+
   for (const Node &node : automata().nodes()) {
     write(SHAPE_FMT, node.index(), node.ok() ? "circle" : "square");
+
+    if (m_options & GraphvizAnon) {
+      write(ANON_FMT, node.index());
+    }
   }
 }
 

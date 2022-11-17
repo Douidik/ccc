@@ -1,8 +1,8 @@
 #ifndef CCC_REGEX_STATE_HPP
 #define CCC_REGEX_STATE_HPP
 
+#include "escape_sequence.hpp"
 #include "match.hpp"
-#include <fmt/format.h>
 
 namespace ccc::regex {
 
@@ -48,21 +48,6 @@ struct formatter<State> {
     return context.begin();
   }
 
-  constexpr auto escaped(const char &c) -> std::string_view {
-    switch (c) {
-    case '\t': return R"(\\t)";
-    case '\v': return R"(\\v)";
-    case '\0': return R"(\\0)";
-    case '\b': return R"(\\b)";
-    case '\f': return R"(\\f)";
-    case '\n': return R"(\\n)";
-    case '\r': return R"(\\r)";
-    case '\"': return R"(\")";
-
-    default: return {&c, 1};
-    }
-  }
-
   constexpr auto format(const State &state, auto &context) {
     switch (state.type()) {
     case Type::Epsilon: {
@@ -72,19 +57,13 @@ struct formatter<State> {
     case Type::Dash: {
       return format_to(context.out(), "</>");
     }
-      
+
     case Type::Any: {
       return format_to(context.out(), "<^>");
     }
 
     case Type::Text: {
-      format_to(context.out(), "'");
-
-      for (const char &c : state.data()) {
-        format_to(context.out(), "{}", escaped(c));
-      }
-
-      return format_to(context.out(), "'");
+      return format_to(context.out(), "'{}'", FmtEscaped {state.data()});
     }
 
     case Type::Range: {

@@ -251,7 +251,7 @@ constexpr auto trait_name(u32 trait) -> std::string_view {
   case Comma: return "Comma";
   }
 
-  return "";
+  return "?";
 }
 
 }  // namespace ccc

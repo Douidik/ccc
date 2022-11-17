@@ -54,7 +54,7 @@ auto Parser::parse_new_token() -> size_t {
   switch (*m_token) {
   case ' ': m_token++, parse_new_token(); break;
 
-  case '_': parse_range("\n\t\v\b\f "); break;
+  case '_': parse_range("\n \v\b\f\t"); break;
   case 'a': parse_range("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"); break;
   case 'o': parse_range("!#$%&()*+,-./:;<=>?@[\\]^`{|}~"); break;
   case 'n': parse_range("0123456789"); break;

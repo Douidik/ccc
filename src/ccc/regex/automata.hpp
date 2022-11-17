@@ -12,7 +12,7 @@ class Automata {
 public:
   Automata();
   Automata(const Automata &automata) = default;
-  
+
   auto nodes() -> std::span<Node> {
     return {&m_buffer[0], m_size};
   }
@@ -25,7 +25,7 @@ public:
     return m_size;
   }
 
-  auto empty() const -> u64 {
+  auto empty() const -> bool {
     return !m_size;
   }
 

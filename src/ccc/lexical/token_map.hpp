@@ -23,7 +23,7 @@ static auto token_map() {
     {HsIfdef, "'#' _* 'ifdef'"_rx},
     {HsIfndef, "'#' _* 'ifndef'"_rx},
 
-    {Sizeof, "'sizeof'"_rx},
+    {Sizeof, "'sizeof' / {o|_}"_rx},
     {Star, "'*'"_rx},
     {Ampersand, "'&'"_rx},
 
@@ -102,7 +102,7 @@ static auto token_map() {
     {None, "~_"_rx},
   };
 
-  return std::span(map, sizeof(map));
+  return std::span(map, 84);
 }
 
 using TokenMap = std::invoke_result_t<decltype(token_map)>;

@@ -2,13 +2,14 @@
 #define CCC_REGEX_PARSER_EXCEPTION_HPP
 
 #include "exception.hpp"
+#include "escape_sequence.hpp"
 
 namespace ccc::regex {
 
 class ParserException : public Exception {
 public:
   ParserException(std::string_view description, std::string_view source, const char *token) :
-    Exception {fmt(), source, '^', token - &source[0] + 1, description} {}
+    Exception {fmt(), FmtEscaped {source}, '^', token - &source[0] + 1, description} {}
 
 private:
   auto name() const noexcept -> std::string_view override {

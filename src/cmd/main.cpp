@@ -7,6 +7,7 @@
 #include <magic_enum.hpp>
 
 using namespace ccc;
+using namespace regex;
 using namespace regex::literals;
 
 constexpr std::string_view source = R"(
@@ -95,16 +96,21 @@ auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
   }
 
   fmt::print("{:<{}} => {}\n", token.view, 15, trait_name(token.trait));
-  return print_tokens(lexer, count);
+  return print_tokens(lexer, count + 1);
 }
 
 }  // namespace ccc
 
-int main(int argc, char **argv) {
-  Lexer lexer {source};
-  print_tokens(lexer);
+#include <fstream>
 
-  // if (argc > 1) {
-  //   std::cout << regex::Graphviz(Regex(argv[1])).document() << std::endl;
-  // }
+int main(int argc, char **argv) {
+  // Lexer lexer {source};
+  // fmt::print("Lexer tokenized #{} tokens from source\n", print_tokens(lexer));
+
+  auto map = token_map();
+
+  for (const auto &[trait, regex] : map) {
+    std::ofstream stream {fmt::format("graph/{}.dot", trait_name(trait))};
+    stream << Graphviz(regex, GraphvizAnon, trait_name(trait)).document() << std::endl;
+  }
 }
