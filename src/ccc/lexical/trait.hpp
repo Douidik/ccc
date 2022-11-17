@@ -13,7 +13,7 @@ namespace ccc::trait {
 // C: Class bit
 // G: Group bit
 // T: N bit
-// Each trait is 32 bits long {5 Class, 14 Group, 12 N}
+// Each trait is 32 bits long {Class: 6 bits, Group: 14 bits, N: 12 bits}
 // C|C|C|C|C|C|G|G|G|G|G|G|G|G|G|G|G|G|G|N|N|N|N|N|N|N|N|N|N|N|N|N
 
 constexpr u32 TRAIT_SIZE = 32;
@@ -23,16 +23,16 @@ constexpr u32 N_SIZE = 12;
 
 static_assert(CLASS_SIZE + GROUP_SIZE + N_SIZE == TRAIT_SIZE);
 
-template<u32 C>
+template<u32 N>
 constexpr auto define_class() -> u32 {
-  static_assert(C < CLASS_SIZE);
-  return 1 << (TRAIT_SIZE - CLASS_SIZE + C);
+  static_assert(N < CLASS_SIZE);
+  return 1 << (TRAIT_SIZE - CLASS_SIZE + N);
 }
 
-template<u32 G>
+template<u32 N>
 constexpr auto define_group() -> u32 {
-  static_assert(G < GROUP_SIZE);
-  return 1 << (TRAIT_SIZE - CLASS_SIZE - GROUP_SIZE + G);
+  static_assert(N < GROUP_SIZE);
+  return 1 << (TRAIT_SIZE - CLASS_SIZE - GROUP_SIZE + N);
 }
 
 template<u32 C, u32 G, u32 N>
