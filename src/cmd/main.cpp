@@ -1,10 +1,13 @@
 #include "lexical/lexer.hpp"
 #include "lexical/lexer_exception.hpp"
+#include "regex/graphviz.hpp"
+#include "regex/regex.hpp"
 #include <fmt/format.h>
 #include <iostream>
 #include <magic_enum.hpp>
 
 using namespace ccc;
+using namespace regex::literals;
 
 constexpr std::string_view source = R"(
 /* return non-zero if magic sequence is detected */
@@ -100,4 +103,8 @@ auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
 int main(int argc, char **argv) {
   Lexer lexer {source};
   print_tokens(lexer);
+
+  // if (argc > 1) {
+  //   std::cout << regex::Graphviz(Regex(argv[1])).document() << std::endl;
+  // }
 }

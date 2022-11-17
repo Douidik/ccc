@@ -11,6 +11,9 @@ auto State::submit(std::string_view expression, size_t index) const -> size_t {
   case Epsilon: {
     return index;
   }
+  case Dash: {
+    return index;
+  }
   case Any: {
     return index < expression.size() ? index + 1 : npos();
   }

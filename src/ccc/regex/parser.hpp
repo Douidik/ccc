@@ -30,7 +30,8 @@ private:
   void parse_star();
   void parse_plus();
   void parse_wave();
-
+  void parse_dash();
+  
   auto stack_push(Automata automata = {}) -> Automata & {
     return m_stack.emplace_back(automata);
   }

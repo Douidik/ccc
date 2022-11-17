@@ -20,7 +20,7 @@ auto Node::submit(std::string_view expression, size_t index) const -> size_t {
       auto match_fwd = edge->submit(expression, match);
 
       if (match_fwd != npos()) {
-        return match_fwd;
+	return m_state.type() != Type::Dash ? match_fwd : match;
       }
     }
 

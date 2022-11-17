@@ -3,7 +3,6 @@
 #include <algorithm>
 
 namespace ccc::regex {
-
 using enum Type;
 
 Parser::Parser(std::string_view source) : m_source(source) {}
@@ -63,6 +62,7 @@ auto Parser::parse_new_token() -> size_t {
   case 'q': parse_range("'"); break;
 
   case '^': parse_any(); break;
+  case '/': parse_dash(); break;
   case '\'': parse_text(); break;
   case '{': parse_sequence(); break;
   case '|': parse_or(); break;
@@ -120,6 +120,10 @@ void Parser::parse_range(std::string_view data) {
 
 void Parser::parse_any() {
   stack_push().push({Any}, {}, {});
+}
+
+void Parser::parse_dash() {
+  stack_push().push({Dash}, {}, {});
 }
 
 void Parser::parse_text() {

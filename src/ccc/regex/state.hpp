@@ -9,6 +9,7 @@ namespace ccc::regex {
 enum class Type {
   Epsilon,
   Any,
+  Dash,
   Text,
   Range,
 };
@@ -30,10 +31,10 @@ public:
   auto ok() const -> bool {
     return m_type != Type::Any;
   }
-  
+
 private:
-  std::string_view m_data;
   Type m_type;
+  std::string_view m_data;
 };
 
 }  // namespace ccc::regex
@@ -68,6 +69,10 @@ struct formatter<State> {
       return format_to(context.out(), "<$>");
     }
 
+    case Type::Dash: {
+      return format_to(context.out(), "</>");
+    }
+      
     case Type::Any: {
       return format_to(context.out(), "<^>");
     }

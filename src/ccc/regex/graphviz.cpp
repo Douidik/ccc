@@ -7,6 +7,7 @@ constexpr std::string_view CREDITS =
   R"(# Regex Graph generated with: https://github.com/douidik/ccc
 # <?> Error
 # <$> Epsilon state
+# </> Dash state
 # <^> Any state
 # '...' Text
 # [a..b] Range

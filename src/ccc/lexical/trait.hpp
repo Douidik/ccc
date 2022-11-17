@@ -5,8 +5,7 @@
 #include <fmt/format.h>
 #include <string_view>
 
-// Namespace is Capitalized to simulate a C++11 scoped enumerator
-// Trait should always be typed as u32 in the source code
+// A trait should always be typed as u32 in the source code !
 namespace ccc::trait {
 
 // Trait Layout
@@ -63,7 +62,7 @@ enum TraitEnum : u32 {
   GpAccess = define_group<9>(),
   GpBin = define_group<10>(),
   GpBinary = define_group<11>(),
-  GpImmediate = define_group<12>(),
+  GpConstant = define_group<12>(),
 
   None = define<CsMeta, GpNpc, 0>(),
   Blank = define<CsMeta, GpNpc, 1>(),
@@ -85,11 +84,12 @@ enum TraitEnum : u32 {
 
   KwAuto = define<CsKeyword, GpType, 0>(),
   KwDouble = define<CsKeyword, GpType, 1>(),
-  KwFloat = define<CsKeyword, GpType, 2>(),
-  KwInt = define<CsKeyword, GpType, 3>(),
-  KwLong = define<CsKeyword, GpType, 4>(),
-  KwShort = define<CsKeyword, GpType, 5>(),
-  KwVoid = define<CsKeyword, GpType, 6>(),
+  KwChar = define<CsKeyword, GpType, 2>(),
+  KwFloat = define<CsKeyword, GpType, 3>(),
+  KwInt = define<CsKeyword, GpType, 4>(),
+  KwVoid = define<CsKeyword, GpType, 5>(),
+  KwLong = define<CsKeyword, GpType | GpModifier, 0>(),
+  KwShort = define<CsKeyword, GpType | GpModifier, 1>(),
   KwEnum = define<CsKeyword, GpDefine, 0>(),
   KwTypedef = define<CsKeyword, GpDefine, 1>(),
   KwUnion = define<CsKeyword, GpDefine, 2>(),
@@ -123,10 +123,10 @@ enum TraitEnum : u32 {
   CrochetClose = define<CsBracket, GpNone, 5>(),
 
   Identifier = define<CsData, GpNone, 0>(),
-  Float = define<CsData, GpImmediate, 0>(),
-  Integer = define<CsData, GpImmediate, 1>(),
-  String = define<CsData, GpImmediate, 2>(),
-  Char = define<CsData, GpImmediate, 3>(),
+  Float = define<CsData, GpConstant, 0>(),
+  Integer = define<CsData, GpConstant, 1>(),
+  String = define<CsData, GpConstant, 2>(),
+  Char = define<CsData, GpConstant, 3>(),
 
   Increment = define<CsOperator, GpNone, 1>(),
   Decrement = define<CsOperator, GpNone, 2>(),
@@ -183,6 +183,7 @@ constexpr auto trait_name(u32 trait) -> std::string_view {
   case Ampersand: return "Ampersand";
   case KwAuto: return "KwAuto";
   case KwDouble: return "KwDouble";
+  case KwChar: return "KwChar";
   case KwFloat: return "KwFloat";
   case KwInt: return "KwInt";
   case KwLong: return "KwLong";

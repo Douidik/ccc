@@ -38,39 +38,40 @@
 ### Keyword
 > **Reserved Tokens**
 
-| Name       | Regex               | Group    | N  |
-|------------|---------------------|----------|----|
-| KwSizeof   | `'sizeof' {o\|_}`   | None     | 0  |
-| KwAuto     | `'auto' {o\|_}`     | Type     | 0  |
-| KwDouble   | `'double' {o\|_}`   | Type     | 1  |
-| KwFloat    | `'float' {o\|_}`    | Type     | 2  |
-| KwInt      | `'int' {o\|_}`      | Type     | 3  |
-| KwLong     | `'long' {o\|_}`     | Type     | 4  |
-| KwShort    | `'short' {o\|_}`    | Type     | 5  |
-| KwVoid     | `'void' {o\|_}`     | Type     | 6  |
-| KwEnum     | `'enum' {o\|_}`     | Define   | 0  |
-| KwTypedef  | `'typedef' {o\|_}`  | Define   | 1  |
-| KwUnion    | `'union' {o\|_}`    | Define   | 2  |
-| KwStruct   | `'struct' {o\|_}`   | Define   | 3  |
-| KwVolatile | `'volatile' {o\|_}` | Modifier | 0  |
-| KwConst    | `'const' {o\|_}`    | Modifier | 1  |
-| KwExtern   | `'extern' {o\|_}`   | Modifier | 2  |
-| KwRegister | `'register' {o\|_}` | Modifier | 3  |
-| KwStatic   | `'static' {o\|_}`   | Modifier | 4  |
-| KwSigned   | `'signed' {o\|_}`   | Modifier | 5  |
-| KwUnsigned | `'unsigned' {o\|_}` | Modifier | 6  |
-| KwBreak    | `'break' {o\|_}`    | Flow     | 0  |
-| KwCase     | `'case' {o\|_}`     | Flow     | 1  |
-| KwContinue | `'continue' {o\|_}` | Flow     | 2  |
-| KwDefault  | `'default' {o\|_}`  | Flow     | 3  |
-| KwDo       | `'do' {o\|_}`       | Flow     | 4  |
-| KwElse     | `'else' {o\|_}`     | Flow     | 5  |
-| KwFor      | `'for' {o\|_}`      | Flow     | 6  |
-| KwGoto     | `'goto' {o\|_}`     | Flow     | 7  |
-| KwIf       | `'if' {o\|_}`       | Flow     | 8  |
-| KwReturn   | `'return' {o\|_}`   | Flow     | 9  |
-| KwSwitch   | `'switch' {o\|_}`   | Flow     | 10 |
-| KwWhile    | `'while' {o\|_}`    | Flow     | 11 |
+| Name       | Regex               | Group            | N  |
+|------------|---------------------|------------------|----|
+| KwSizeof   | `'sizeof' {o\|_}`   | None             | 0  |
+| KwAuto     | `'auto' {o\|_}`     | Type             | 0  |
+| KwDouble   | `'double' {o\|_}`   | Type             | 1  |
+| KwChar     | `'char' {o\|_}`     | Type             | 2  |
+| KwFloat    | `'float' {o\|_}`    | Type             | 3  |
+| KwInt      | `'int' {o\|_}`      | Type             | 4  |
+| KwVoid     | `'void' {o\|_}`     | Type             | 5  |
+| KwLong     | `'long' {o\|_}`     | Type \| Modifier | 0  |
+| KwShort    | `'short' {o\|_}`    | Type \| Modifier | 1  |
+| KwEnum     | `'enum' {o\|_}`     | Define           | 0  |
+| KwTypedef  | `'typedef' {o\|_}`  | Define           | 1  |
+| KwUnion    | `'union' {o\|_}`    | Define           | 2  |
+| KwStruct   | `'struct' {o\|_}`   | Define           | 3  |
+| KwVolatile | `'volatile' {o\|_}` | Modifier         | 0  |
+| KwConst    | `'const' {o\|_}`    | Modifier         | 1  |
+| KwExtern   | `'extern' {o\|_}`   | Modifier         | 2  |
+| KwRegister | `'register' {o\|_}` | Modifier         | 3  |
+| KwStatic   | `'static' {o\|_}`   | Modifier         | 4  |
+| KwSigned   | `'signed' {o\|_}`   | Modifier         | 5  |
+| KwUnsigned | `'unsigned' {o\|_}` | Modifier         | 6  |
+| KwBreak    | `'break' {o\|_}`    | Flow             | 0  |
+| KwCase     | `'case' {o\|_}`     | Flow             | 1  |
+| KwContinue | `'continue' {o\|_}` | Flow             | 2  |
+| KwDefault  | `'default' {o\|_}`  | Flow             | 3  |
+| KwDo       | `'do' {o\|_}`       | Flow             | 4  |
+| KwElse     | `'else' {o\|_}`     | Flow             | 5  |
+| KwFor      | `'for' {o\|_}`      | Flow             | 6  |
+| KwGoto     | `'goto' {o\|_}`     | Flow             | 7  |
+| KwIf       | `'if' {o\|_}`       | Flow             | 8  |
+| KwReturn   | `'return' {o\|_}`   | Flow             | 9  |
+| KwSwitch   | `'switch' {o\|_}`   | Flow             | 10 |
+| KwWhile    | `'while' {o\|_}`    | Flow             | 11 |
 	
 ### Bracket
 | Name         | Regex | Group | N |

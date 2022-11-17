@@ -28,7 +28,7 @@ auto Automata::merge(const Automata &automata, Node::MutSet owners, Node::Set ed
     }
   }
 
-  // Link merged root with given owners
+  // Link merged root with the given owners
   if (!map.empty()) {
     const Node *root = map[automata.root()];
 
