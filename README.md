@@ -3,7 +3,7 @@
 ## Work in progress 🔬:
 - ### Lexical analysis
 	- 🟢 Regular expression implementation 🔤
-	- 🔴 Lexer engine and tokenization 🗃️
+	- 🟢 Lexer engine and tokenization 🗃️
 - ### Parser:
 	- 🔴 Abstract system tree, the node structure 🌳
 	- 🔴 Parser engine, tokens to AST 🧠
