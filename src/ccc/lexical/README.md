@@ -3,6 +3,7 @@
 ## Traits 🧬
 > Trait: bitset giving a description of the token type
 ```cpp
+// See trait.hpp
 // Trait Layout
 // C: Class bit
 // G: Group bit
