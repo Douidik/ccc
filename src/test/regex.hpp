@@ -3,7 +3,7 @@
 
 #include "regex/parser_exception.hpp"
 #include "regex/regex.hpp"
-#include <catch2/catch_test_macros.hpp>
+#include <gtest/gtest.h>
 
 namespace ccc::regex {
 
@@ -28,146 +28,114 @@ inline auto quoted(std::string_view expression) -> std::string {
   return fmt::format("'{}'", expression);
 }
 
-TEST_CASE("Regex") {
-  SECTION("Regex: Unknown tokens") {
-    CHECK_THROWS_AS("N"_rx, ParserException);
-    CHECK_THROWS_AS(")"_rx, ParserException);
-    CHECK_THROWS_AS("ù"_rx, ParserException);
-  }
+TEST(Regex, UnknownToken) {
+  EXPECT_THROW("N"_rx, ParserException);
+  EXPECT_THROW(")"_rx, ParserException);
+  EXPECT_THROW("ù"_rx, ParserException);
+}
 
-  SECTION("Regex: Literals") {
-    SECTION("Basic") {
-      CHECK("'abc'"_rx.match("abc"));
-      CHECK("'abc'"_rx.match("abcccccccccc"));
-      CHECK("'hello' ' ' 'world'"_rx.match("hello world"));
-      CHECK("'hello\nworld'"_rx.match("hello\nworld"));
-      CHECK(Regex(quoted(LOREM_IPSUM)).match(LOREM_IPSUM));
-    }
+TEST(Regex, Text) {
+  EXPECT_TRUE("'abc'"_rx.match("abc"));
+  EXPECT_TRUE("'abc'"_rx.match("abcccccccccc"));
+  EXPECT_TRUE("'hello' ' ' 'world'"_rx.match("hello world"));
+  EXPECT_TRUE("'hello\nworld'"_rx.match("hello\nworld"));
+  EXPECT_TRUE(Regex(quoted(LOREM_IPSUM)).match(LOREM_IPSUM));
 
-    SECTION("Invalid") {
-      CHECK_THROWS_AS("'hello"_rx, ParserException);
-      CHECK_THROWS_AS("hello'"_rx, ParserException);
-      CHECK_THROWS_AS("hello"_rx, ParserException);
-    }
+  EXPECT_THROW("'hello"_rx, ParserException);
+  EXPECT_THROW("hello'"_rx, ParserException);
+  EXPECT_THROW("hello"_rx, ParserException);
 
-    SECTION("False") {
-      CHECK_FALSE("'cba'"_rx.match("abc"));
-      CHECK_FALSE("'cbaa'"_rx.match("abcc"));
-      CHECK_FALSE(Regex(quoted(LOREM_IPSUM)).match(LOREM_IPSUM.substr(1)));
-      CHECK_FALSE(Regex(quoted(LOREM_IPSUM)).match(LOREM_IPSUM.substr(0, LOREM_IPSUM.size() - 2)));
-    }
-  }
+  EXPECT_FALSE("'cba'"_rx.match("abc"));
+  EXPECT_FALSE("'cbaa'"_rx.match("abcc"));
+  EXPECT_FALSE(Regex(quoted(LOREM_IPSUM)).match(LOREM_IPSUM.substr(1)));
+  EXPECT_FALSE(Regex(quoted(LOREM_IPSUM)).match(LOREM_IPSUM.substr(0, LOREM_IPSUM.size() - 2)));
+}
 
-  SECTION("Regex: Character classes") {
-    SECTION("Basic") {
-      CHECK("_"_rx.match("\n"));
-      CHECK("a"_rx.match("a"));
-      CHECK("o"_rx.match("+"));
-      CHECK("n"_rx.match("7"));
-      CHECK("Q"_rx.match("\""));
-      CHECK("q"_rx.match("'"));
-    }
+TEST(Regex, Range) {
+  EXPECT_TRUE("_"_rx.match("\n"));
+  EXPECT_TRUE("a"_rx.match("a"));
+  EXPECT_TRUE("o"_rx.match("+"));
+  EXPECT_TRUE("n"_rx.match("7"));
+  EXPECT_TRUE("Q"_rx.match("\""));
+  EXPECT_TRUE("q"_rx.match("'"));
 
-    SECTION("False") {
-      CHECK_FALSE("_"_rx.match("b"));
-      CHECK_FALSE("a"_rx.match("4"));
-      CHECK_FALSE("o"_rx.match("\t"));
-      CHECK_FALSE("n"_rx.match("|"));
-      CHECK_FALSE("Q"_rx.match("^"));
-      CHECK_FALSE("q"_rx.match("&"));
-    }
-  }
+  EXPECT_FALSE("_"_rx.match("b"));
+  EXPECT_FALSE("a"_rx.match("4"));
+  EXPECT_FALSE("o"_rx.match("\t"));
+  EXPECT_FALSE("n"_rx.match("|"));
+  EXPECT_FALSE("Q"_rx.match("^"));
+  EXPECT_FALSE("q"_rx.match("&"));
+}
 
-  SECTION("Regex: Sequences") {
-    SECTION("Basic") {
-      CHECK("{'abc'}"_rx.match("abc"));
-      CHECK("{'ab'} {'c'}"_rx.match("abc"));
-      CHECK("{{{{{{'ab'} {'c'}}}}}}"_rx.match("abc"));
-    }
+TEST(Regex, Sequence) {
+  EXPECT_TRUE("{'abc'}"_rx.match("abc"));
+  EXPECT_TRUE("{'ab'} {'c'}"_rx.match("abc"));
+  EXPECT_TRUE("{{{{{{'ab'} {'c'}}}}}}"_rx.match("abc"));
 
-    SECTION("Invalid") {
-      CHECK_THROWS_AS("{'abc'"_rx, ParserException);
-      CHECK_THROWS_AS("{"_rx, ParserException);
-      CHECK_THROWS_AS("}"_rx, ParserException);
-      CHECK_THROWS_AS("{{{'abc'"_rx, ParserException);
-      CHECK_THROWS_AS("'abc'}}}"_rx, ParserException);
-    }
-  }
+  EXPECT_THROW("{'abc'"_rx, ParserException);
+  EXPECT_THROW("{"_rx, ParserException);
+  EXPECT_THROW("}"_rx, ParserException);
+  EXPECT_THROW("{{{'abc'"_rx, ParserException);
+  EXPECT_THROW("'abc'}}}"_rx, ParserException);
+}
 
-  SECTION("Regex: Quantifier plus") {
-    SECTION("Basic") {
-      CHECK("{'abc'}+"_rx.match("abcabcabc"));
-      CHECK("{'ab'n}+"_rx.match("ab1ab2ab3"));
-      CHECK("n+n+"_rx.match("12"));
-    }
+TEST(Regex, Plus) {
+  EXPECT_TRUE("{'abc'}+"_rx.match("abcabcabc"));
+  EXPECT_TRUE("{'ab'n}+"_rx.match("ab1ab2ab3"));
+  EXPECT_TRUE("n+n+"_rx.match("12"));
 
-    SECTION("Invalid") {
-      CHECK_THROWS_AS("+"_rx, ParserException);
-      CHECK_THROWS_AS("++"_rx, ParserException);
-      CHECK_THROWS_AS("+a"_rx, ParserException);
-      CHECK_THROWS_AS("{}+"_rx, ParserException);
-    }
-  }
+  EXPECT_THROW("+"_rx, ParserException);
+  EXPECT_THROW("++"_rx, ParserException);
+  EXPECT_THROW("+a"_rx, ParserException);
+  EXPECT_THROW("{}+"_rx, ParserException);
+}
 
-  SECTION("Regex: Quantifier kleene") {
-    SECTION("Basic") {
-      CHECK("{'abc'}*"_rx.match("abc"));
-      CHECK("{'abc'}*"_rx.match(""));
-      CHECK("{'ab'n}*"_rx.match("ab1ab2ab3"));
-      CHECK("{{{'hello'}}}*"_rx.match(""));
-      CHECK("{{{'hello'}}}*"_rx.match("hellohellohello"));
-    }
+TEST(Regex, Star) {
+  EXPECT_TRUE("{'abc'}*"_rx.match("abc"));
+  EXPECT_TRUE("{'abc'}*"_rx.match(""));
+  EXPECT_TRUE("{'ab'n}*"_rx.match("ab1ab2ab3"));
+  EXPECT_TRUE("{{{'hello'}}}*"_rx.match(""));
+  EXPECT_TRUE("{{{'hello'}}}*"_rx.match("hellohellohello"));
 
-    SECTION("Invalid") {
-      CHECK_THROWS_AS("*"_rx, ParserException);
-      CHECK_THROWS_AS("***"_rx, ParserException);
-      CHECK_THROWS_AS("*a"_rx, ParserException);
-      CHECK_THROWS_AS("{}*"_rx, ParserException);
-    }
-  }
+  EXPECT_THROW("*"_rx, ParserException);
+  EXPECT_THROW("***"_rx, ParserException);
+  EXPECT_THROW("*a"_rx, ParserException);
+  EXPECT_THROW("{}*"_rx, ParserException);
+}
 
-  SECTION("Regex: Quantifier quest") {
-    SECTION("Basic") {
-      CHECK("{'abc'}?"_rx.match("abc"));
-      CHECK("{'abc'}?"_rx.match(""));
-      CHECK("{'ab'n}?"_rx.match("ab1"));
-      CHECK("{{{'hello'}}}?"_rx.match(""));
-      CHECK("{{{'hello'}}}?"_rx.match("hello"));
-    }
+TEST(Regex, Quest) {
+  EXPECT_TRUE("{'abc'}?"_rx.match("abc"));
+  EXPECT_TRUE("{'abc'}?"_rx.match(""));
+  EXPECT_TRUE("{'ab'n}?"_rx.match("ab1"));
+  EXPECT_TRUE("{{{'hello'}}}?"_rx.match(""));
+  EXPECT_TRUE("{{{'hello'}}}?"_rx.match("hello"));
 
-    SECTION("Invalid") {
-      CHECK_THROWS_AS("?"_rx, ParserException);
-      CHECK_THROWS_AS("???"_rx, ParserException);
-      CHECK_THROWS_AS("?a"_rx, ParserException);
-      CHECK_THROWS_AS("{}?"_rx, ParserException);
-    }
-  }
+  EXPECT_THROW("?"_rx, ParserException);
+  EXPECT_THROW("???"_rx, ParserException);
+  EXPECT_THROW("?a"_rx, ParserException);
+  EXPECT_THROW("{}?"_rx, ParserException);
+}
 
-  SECTION("Regex: Alternative") {
-    SECTION("Basic") {
-      CHECK("{'a'|'b'}"_rx.match("a"));
-      CHECK("{'a'|'b'}"_rx.match("a"));
-      CHECK("{'a' | 'b'}"_rx.match("a"));
-      CHECK("{'a' | 'b'}"_rx.match("b"));
-      CHECK("a{a|'_'|n}*"_rx.match("snake_case_variable123"));
-    }
+TEST(Regex, Or) {
+  EXPECT_TRUE("{'a'|'b'}"_rx.match("a"));
+  EXPECT_TRUE("{'a'|'b'}"_rx.match("a"));
+  EXPECT_TRUE("{'a' | 'b'}"_rx.match("a"));
+  EXPECT_TRUE("{'a' | 'b'}"_rx.match("b"));
+  EXPECT_TRUE("a{a|'_'|n}*"_rx.match("snake_case_variable123"));
 
-    SECTION("Invalid") {
-      CHECK_THROWS_AS("|"_rx, ParserException);
-      CHECK_THROWS_AS("||"_rx, ParserException);
-      CHECK_THROWS_AS("|||"_rx, ParserException);
+  EXPECT_THROW("|"_rx, ParserException);
+  EXPECT_THROW("||"_rx, ParserException);
+  EXPECT_THROW("|||"_rx, ParserException);
+  EXPECT_THROW("'a'|{}"_rx, ParserException);
+  EXPECT_THROW("{}|'b'"_rx, ParserException);
+  EXPECT_THROW("'a'|"_rx, ParserException);
+  EXPECT_THROW("|'b'"_rx, ParserException);
+}
 
-      CHECK_THROWS_AS("'a'|{}"_rx, ParserException);
-      CHECK_THROWS_AS("{}|'b'"_rx, ParserException);
-      CHECK_THROWS_AS("'a'|"_rx, ParserException);
-      CHECK_THROWS_AS("|'b'"_rx, ParserException);
-    }
-  }
-
-  SECTION("Regex: Wave") {
-    CHECK("{'a'~'f'}"_rx.match("abcdef"));
-    CHECK_THROWS_AS("{'a'~{}}"_rx.match("abcdef"), ParserException);
-  }
+TEST(Regex, Wave) {
+  EXPECT_TRUE("{'a'~'f'}"_rx.match("abcdef"));
+  EXPECT_EQ("~'9'"_rx.match("4382923").view(), "43829");
+  EXPECT_THROW("{'a'~{}}"_rx.match("abcdef"), ParserException);
 }
 
 }  // namespace ccc::regex

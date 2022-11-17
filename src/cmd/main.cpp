@@ -1,4 +1,5 @@
 #include "lexical/lexer.hpp"
+#include "lexical/lexer_exception.hpp"
 #include <fmt/format.h>
 #include <iostream>
 #include <magic_enum.hpp>
@@ -75,16 +76,28 @@ int unpack_file(const char* input_file) {
   }
 )";
 
+namespace ccc {
+
+auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
+  Token token {};
+
+  try {
+    token = lexer.tokenize();
+  } catch (const LexerException &exception) {
+    std::cerr << exception.what() << std::endl;
+  }
+
+  if (token.trait == trait::End) {
+    return count;
+  }
+
+  fmt::print("{:<{}} => {}\n", token.view, 15, trait_name(token.trait));
+  return print_tokens(lexer, count);
+}
+
+}  // namespace ccc
+
 int main(int argc, char **argv) {
   Lexer lexer {source};
-
-  for (;;) {
-    auto token = lexer.tokenize();
-
-    if (token.category == Category::End) {
-      break;
-    }
-
-    fmt::print("{:<{}} => {}\n", token.view, 15, magic_enum::enum_name(token.category));
-  }
+  print_tokens(lexer);
 }

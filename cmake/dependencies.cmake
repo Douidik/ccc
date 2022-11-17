@@ -8,6 +8,6 @@ endif()
 
 include(${CPM_FILEPATH})
 
-CPMAddPackage("gh:catchorg/catch2#v3.1.1")
+CPMAddPackage("gh:google/googletest#release-1.12.1")
 CPMAddPackage("gh:neargye/magic_enum#v0.8.1")
 CPMAddPackage("gh:fmtlib/fmt#8.1.1")

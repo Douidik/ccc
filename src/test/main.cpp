@@ -1,8 +1,10 @@
+#include "lexer.hpp"
 #include "regex.hpp"
-#include <catch2/catch_session.hpp>
+#include <gtest/gtest.h>
 
 using namespace ccc;
 
 auto main(i32 argc, char **argv) -> i32 {
-  return Catch::Session().run(argc, argv);
+  testing::InitGoogleTest();
+  return RUN_ALL_TESTS();
 }

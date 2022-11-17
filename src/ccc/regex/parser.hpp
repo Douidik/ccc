@@ -16,9 +16,11 @@ private:
   auto merge_stack() -> Automata;
   auto sequence_source() -> std::string_view;
   auto parse_new_token() -> size_t;
+  
   auto parse_binary_op(char op) -> std::pair<Automata, Automata>;
+  auto parse_pre_op(char op) -> Automata;
   auto parse_post_op(char op) -> Automata;
-
+  
   void parse_range(std::string_view data);
   void parse_any();
   void parse_text();

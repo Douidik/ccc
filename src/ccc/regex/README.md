@@ -1,22 +1,22 @@
-## Regex System 🔤:
+## Regex System :abc:
 **WARNING !** This regex implementation does not follow the standard regex.
 ### Syntax:
-| Token    | Name         | Description                          |
-|----------|--------------|--------------------------------------|
-|          | Space        | Spaces are ignored                   |
-| _        | Whitespace   | Whitespaces character set            |
-| a        | Alpha        | [A-Za-z]                             |
-| o        | Operators    | Operator character set               |
-| n        | Numbers      | [0-9]                                |
-| Q        | Double Quote | " Avoids character escaping          |
-| q        | Single Quote | ' Avoids character escaping          |
-| ^        | Any          | Matches any character                |
-| '...'    | Text         | Literal text between quotes             |
-| {...}    | Sequence     | Declare sub-pattern between braces       |
+| Token        | Name         | Description                              |
+|--------------|--------------|------------------------------------------|
+|              | Space        | Spaces are ignored                       |
+| _            | Whitespace   | Whitespaces character set                |
+| a            | Alpha        | [A-Za-z]                                 |
+| o            | Operators    | Operator character set                   |
+| n            | Numbers      | [0-9]                                    |
+| Q            | Double Quote | " Avoids character escaping              |
+| q            | Single Quote | ' Avoids character escaping              |
+| ^            | Any          | Matches any character                    |
+| '...'        | Text         | Literal text between quotes              |
+| {...}        | Sequence     | Declare sub-pattern between braces       |
 | \<a\>\|\<b\> | Or           | Matches if either \<a\> or \<b\> matches |
-| \<op\>?    | Quest        | Optional match of \<op\>               |
-| \<op\>*    | Star         | Matches zero or more \<op\>            |
-| \<op\>+    | Plus         | Matches one or more \<op\>             |
+| \<op\>?      | Quest        | Optional match of \<op\>                 |
+| \<op\>*      | Star         | Matches zero or more \<op\>              |
+| \<op\>+      | Plus         | Matches one or more \<op\>               |
 | \<a\>~\<b\>  | Wave         | Matches \^ between \<a\> and \<b\>       |
 
 ### Examples:

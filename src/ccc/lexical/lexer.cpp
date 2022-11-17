@@ -2,25 +2,17 @@
 #include "lexer_exception.hpp"
 
 namespace ccc {
-using enum Category;
+using namespace trait;
 
 Lexer::Lexer(std::string_view source) : m_map(token_map()), m_next(source), m_source(source) {}
 
 auto Lexer::tokenize() -> Token {
   auto token = match();
 
-  switch (token.category) {
-  case None: {
-    throw LexerException {"Unrecognized token", m_source, token};
-  }
-
-  case Blank: {
-    return tokenize();
-  }
-
-  default: {
-    return token;
-  }
+  switch (token.trait) {
+  case None: throw LexerException {"Unrecognized token", m_source, token};
+  case Blank: return tokenize();
+  default: return token;
   }
 }
 
@@ -29,16 +21,16 @@ auto Lexer::match() -> Token {
     return {"", End};
   }
 
-  for (const auto &[category, regex] : m_map) {
+  for (const auto &[trait, regex] : m_map) {
     auto match = regex.match(m_next);
 
     if (match.index() != npos()) {
       m_next = match.next();
-      return {match.view(), category};
+      return {match.view(), trait};
     }
   }
 
-  return {m_next, None};
+  throw LexerException {"Unmatched token", m_source, {{m_source.begin(), m_source.begin()}, None}};
 }
 
 }  // namespace ccc

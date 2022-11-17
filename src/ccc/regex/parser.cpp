@@ -89,21 +89,25 @@ auto Parser::parse_new_token() -> size_t {
 }
 
 auto Parser::parse_binary_op(char op) -> std::pair<Automata, Automata> {
-  auto token_op = m_token++;
+  return {parse_pre_op(op), parse_post_op(op)};
+}
 
-  if (!m_stack.size() || !parse_new_token()) {
-    auto description = fmt::format("Missing operand(s) for binary operator <{}>", op);
+auto Parser::parse_pre_op(char op) -> Automata {
+  auto token_op = m_token;
+
+  if (!m_stack.size()) {
+    auto description = fmt::format("Missing pre-operand for <{}> operator", op);
     throw ParserException {description, m_source, token_op};
   }
 
-  return {stack_pop(), stack_pop()};
+  return stack_pop();
 }
 
 auto Parser::parse_post_op(char op) -> Automata {
   auto token_op = m_token++;
 
   if (!parse_new_token()) {
-    auto description = fmt::format("Missing post-operand for operator <{}>", op);
+    auto description = fmt::format("Missing post-operand for <{}> operator", op);
     throw ParserException {description, m_source, token_op};
   }
 
@@ -134,7 +138,7 @@ void Parser::parse_text() {
 
 void Parser::parse_sequence() {
   auto source = sequence_source();
-  stack_push(Parser {source}.parse());
+  stack_push(Parser(source).parse());
   m_token = source.end();
 }
 
@@ -168,11 +172,7 @@ void Parser::parse_quest() {
   // $
   //   > $'
 
-  if (m_stack.size() < 1) {
-    throw ParserException {"Missing operand for <?>", m_source, m_token};
-  }
-
-  auto operand = stack_pop();
+  auto operand = parse_pre_op('?');
   auto &automata = stack_push();
   auto &gate = automata.push({Epsilon}, {}, {});
 
@@ -185,11 +185,7 @@ void Parser::parse_star() {
   // $
   //   > $'
 
-  if (m_stack.size() < 1) {
-    throw ParserException {"Missing operand for <*>", m_source, m_token};
-  }
-
-  auto operand = stack_pop();
+  auto operand = parse_pre_op('*');
   auto &automata = stack_push();
   auto &gate = automata.push({Epsilon}, {}, {});
 
@@ -200,12 +196,9 @@ void Parser::parse_star() {
 void Parser::parse_plus() {
   // $ > e > $
 
-  if (m_stack.size() < 1) {
-    throw ParserException {"Missing operand for <+>", m_source, m_token};
-  }
-
-  auto &automata = stack_top();
-  automata.push({Epsilon}, {automata.outers()}, {automata.root()});
+  auto operand = parse_pre_op('+');
+  operand.push({Epsilon}, {operand.outers()}, {operand.root()});
+  stack_push(operand);
 }
 
 void Parser::parse_wave() {

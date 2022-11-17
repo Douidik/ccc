@@ -7,7 +7,7 @@ namespace ccc::regex {
 
 class Regex {
 public:
-  Regex(std::string_view source) : m_source(source), m_automata(Parser {source}.parse()) {}
+  Regex(std::string_view source) : m_source(source), m_automata(Parser(source).parse()) {}
 
   auto automata() const -> const Automata & {
     return m_automata;

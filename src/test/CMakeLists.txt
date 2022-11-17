@@ -17,7 +17,7 @@ target_include_directories(
 target_link_libraries(
   ccc-test PRIVATE
   ccc
-  Catch2::Catch2
+  gtest
 )
 
 set_target_properties(
