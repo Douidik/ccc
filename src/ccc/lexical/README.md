@@ -132,3 +132,10 @@
 | Sizeof    | `'sizeof' / {o\|_}` | Keyword \| Operator |                         | 0 |                  |
 | Pointer   | `'*'`               | Operator \| Keyword | Access \| Modifier      | 0 | Deref, KwPointer |
 | Ampersand | `'&'`               | Operator            | Access \| Bin \| Binary | 0 | Address, BinAnd  |
+
+## Machine
+> The algorithm behind ccc is simple, the first match gives us the source and the trait.\
+> \[current, end\[ source is submitted to each of the regular expressions in a precise order.
+
+### The machine graph representation (Commit #492c531)
+![Machine](machine.svg)
