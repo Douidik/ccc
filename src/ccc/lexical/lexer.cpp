@@ -4,7 +4,10 @@
 namespace ccc {
 using namespace trait;
 
-Lexer::Lexer(std::string_view source) : m_map(token_map()), m_next(source), m_source(source) {}
+Lexer::Lexer(std::string_view source, SyntaxMap map) :
+  m_map(map),
+  m_next(source),
+  m_source(source) {}
 
 auto Lexer::tokenize() -> Token {
   auto token = match();
@@ -22,9 +25,7 @@ auto Lexer::match() -> Token {
   }
 
   for (const auto &[trait, regex] : m_map) {
-    auto match = regex.match(m_next);
-
-    if (match.index() != npos()) {
+    if (auto match = regex.match(m_next)) {
       m_next = match.next();
       return {match.view(), trait};
     }

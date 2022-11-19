@@ -16,11 +16,11 @@ public:
     return &m_buffer[0];
   }
 
-protected:
   virtual auto name() const noexcept -> std::string_view {
     return "Exception";
   }
-  
+
+protected:
   virtual auto fmt() const noexcept -> std::string_view {
     return "";
   };

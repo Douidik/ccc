@@ -3,11 +3,11 @@
 ## Traits 🧬
 > Trait: bitset giving a description of the token type
 ```cpp
-// See trait.hpp
+// From trait.hpp
 // Trait Layout
 // C: Class bit
 // G: Group bit
-// T: N bit
+// T: N bit (discriminant bit)
 // Each trait is 32 bits long {Class: 6 bits, Group: 14 bits, N: 12 bits}
 // C|C|C|C|C|C|G|G|G|G|G|G|G|G|G|G|G|G|G|N|N|N|N|N|N|N|N|N|N|N|N|N
 ```
@@ -17,25 +17,12 @@
 
 | Name      | Regex          | Group   | N |
 |-----------|----------------|---------|---|
-| None      | `~_`           | Npc     | 0 |
+| None      | `~/_`          | Npc     | 0 |
 | Blank     | `{_\|'@'}+`    | Npc     | 1 |
 | End       |                | Npc     | 2 |
 | CommentSL | `'//' ~ '\n'`  | Comment | 0 |
 | CommentML | `'/*' ~ '*/''` | Comment | 1 |
 	
-### Directive
-> Commands evaluated at compilation stage
-
-| Name     | Regex             | Group  | N |
-|----------|-------------------|--------|---|
-| HsDefine | `'#' _* 'define'` | Define | 0 |
-| HsUndef  | `'#' _* 'undef'`  | Define | 1 |
-| HsIf     | `'#' _* 'if'`     | Flow   | 0 |
-| HsElse   | `'#' _* 'else'`   | Flow   | 1 |
-| HsEndif  | `'#' _* 'endif'`  | Flow   | 2 |
-| HsIfdef  | `'#' _* 'ifdef'`  | Flow   | 3 |
-| HsIfndef | `'#' _* 'ifndef'` | Flow   | 4 |
-
 ### Keyword
 > **Reserved Tokens**
 
@@ -87,22 +74,21 @@
 ### Operator
 | Name      | Regex    | Group                | N |
 |-----------|----------|----------------------|---|
-| Increment | `'++'`   | None                 | 1 |
-| Decrement | `'--'`   | None                 | 2 |
+| Increment | `'++'`   | None                 | 0 |
+| Decrement | `'--'`   | None                 | 1 |
 | Assign    | `'='`    | Binary               | 0 |
 | Not       | `'!'`    | Logic                | 0 |
 | And       | `'&&'`   | Logic \| Binary      | 0 |
 | Or        | `'\|\|'` | Logic \| Binary      | 1 |
 | Add       | `'+'`    | Arithmetic \| Binary | 0 |
 | Sub       | `'-'`    | Arithmetic \| Binary | 1 |
-| Mul       | `'*'`    | Arithmetic \| Binary | 2 |
-| Div       | `'/'`    | Arithmetic \| Binary | 3 |
-| Mod       | `'%'`    | Arithmetic \| Binary | 4 |
+| Div       | `'/'`    | Arithmetic \| Binary | 2 |
+| Mod       | `'%'`    | Arithmetic \| Binary | 3 |
 | BinNot    | `'~'`    | Bin                  | 0 |
 | BinOr     | `'\|'`   | Bin \| Binary        | 0 |
 | BinXor    | `'^'`    | Bin \| Binary        | 1 |
-| BinShiftL | `'<<'`   | Bin \| Binary        | 1 |
-| BinShiftR | `'>>'`   | Bin \| Binary        | 1 |
+| BinShiftL | `'<<'`   | Bin \| Binary        | 2 |
+| BinShiftR | `'>>'`   | Bin \| Binary        | 3 |
 | Equal     | `'=='`   | Compare \| Binary    | 0 |
 | NotEq     | `'!='`   | Compare \| Binary    | 1 |
 | Less      | `'<'`    | Compare \| Binary    | 2 |
@@ -128,11 +114,11 @@
 ### Polymorphic
 > Represents tokens with **different meanings** based out of the context
 
-| Name      | Regex               | Class               | Group                   | N | Aliases          |
-|-----------|---------------------|---------------------|-------------------------|---|------------------|
-| Sizeof    | `'sizeof' / {o\|_}` | Keyword \| Operator |                         | 0 |                  |
-| Pointer   | `'*'`               | Operator \| Keyword | Access \| Modifier      | 0 | Deref, KwPointer |
-| Ampersand | `'&'`               | Operator            | Access \| Bin \| Binary | 0 | Address, BinAnd  |
+| Name      | Regex               | Class               | Group                                      | Aliases               |
+|-----------|---------------------|---------------------|--------------------------------------------|-----------------------|
+| Sizeof    | `'sizeof' / {o\|_}` | Keyword \| Operator |                                            |                       |
+| Pointer   | `'*'`               | Operator \| Keyword | Access \| Modifier \| Arithmetic \| Binary | Deref, KwPointer, Mul |
+| Ampersand | `'&'`               | Operator            | Access \| Bin \| Binary                    | Address, BinAnd       |
 
 ## Machine
 > The algorithm behind ccc is simple, the first match gives us the source and the trait.\

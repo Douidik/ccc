@@ -9,20 +9,19 @@
 
 namespace ccc {
 
-class LexerException : public SourceException, public Exception {
+class LexerException : SourceException, public Exception {
 public:
   LexerException(std::string_view description, std::string_view source, const Token &token) :
     SourceException(description, source, token.view),
     Exception(fmt(), line(), snippet(), "", cursor_offset(), "", token.view.size(), description) {}
 
-private:
   auto name() const noexcept -> std::string_view override {
     return "LexerException";
   }
 
+private:
   auto fmt() const noexcept -> std::string_view override {
-    return R"(
-with {{
+    return R"(with {{
   {} | {}
       {:>{}}{:^>{}} {}
 }})";

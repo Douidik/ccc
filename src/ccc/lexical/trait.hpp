@@ -5,7 +5,7 @@
 #include <fmt/format.h>
 #include <string_view>
 
-// A trait should always be typed as u32 in the source code !
+// A trait should always be typed as u32 !
 namespace ccc::trait {
 
 // Trait Layout
@@ -43,11 +43,10 @@ constexpr auto define() -> u32 {
 enum TraitEnum : u32 {
   CsNone = 0,
   CsMeta = define_class<0>(),
-  CsDirective = define_class<1>(),
-  CsKeyword = define_class<2>(),
-  CsOperator = define_class<3>(),
-  CsBracket = define_class<4>(),
-  CsData = define_class<5>(),
+  CsKeyword = define_class<1>(),
+  CsOperator = define_class<2>(),
+  CsBracket = define_class<3>(),
+  CsData = define_class<4>(),
 
   GpNone = 0,
   GpNpc = define_group<0>(),
@@ -69,17 +68,10 @@ enum TraitEnum : u32 {
   End = define<CsMeta, GpNpc, 2>(),
   CommentSL = define<CsMeta, GpComment, 0>(),
   CommentML = define<CsMeta, GpComment, 1>(),
-
-  HsDefine = define<CsDirective, GpDefine, 0>(),
-  HsUndef = define<CsDirective, GpDefine, 1>(),
-  HsIf = define<CsDirective, GpFlow, 0>(),
-  HsElse = define<CsDirective, GpFlow, 1>(),
-  HsEndif = define<CsDirective, GpFlow, 2>(),
-  HsIfdef = define<CsDirective, GpFlow, 3>(),
-  HsIfndef = define<CsDirective, GpFlow, 4>(),
-
+  Hash = define<CsMeta, GpNone, 0>(),
+  
   Sizeof = define<CsKeyword | CsOperator, GpAccess, 0>(),
-  Star = define<CsOperator | CsKeyword, GpAccess | GpModifier, 0>(),
+  Star = define<CsOperator | CsKeyword, GpAccess | GpModifier | GpArithmetic | GpBinary, 0>(),
   Ampersand = define<CsOperator, GpAccess | GpBin | GpBinary, 0>(),
 
   KwAuto = define<CsKeyword, GpType, 0>(),
@@ -128,23 +120,23 @@ enum TraitEnum : u32 {
   String = define<CsData, GpConstant, 2>(),
   Char = define<CsData, GpConstant, 3>(),
 
-  Increment = define<CsOperator, GpNone, 1>(),
-  Decrement = define<CsOperator, GpNone, 2>(),
+  Increment = define<CsOperator, GpNone, 0>(),
+  Decrement = define<CsOperator, GpNone, 1>(),
   Assign = define<CsOperator, GpBinary, 0>(),
   Not = define<CsOperator, GpLogic, 0>(),
   And = define<CsOperator, GpLogic | GpBinary, 0>(),
   Or = define<CsOperator, GpLogic | GpBinary, 1>(),
   Add = define<CsOperator, GpArithmetic | GpBinary, 0>(),
   Sub = define<CsOperator, GpArithmetic | GpBinary, 1>(),
-  Mul = define<CsOperator, GpArithmetic | GpBinary, 2>(),
-  Div = define<CsOperator, GpArithmetic | GpBinary, 3>(),
-  Mod = define<CsOperator, GpArithmetic | GpBinary, 4>(),
+  Mul = Star,
+  Div = define<CsOperator, GpArithmetic | GpBinary, 2>(),
+  Mod = define<CsOperator, GpArithmetic | GpBinary, 3>(),
   BinNot = define<CsOperator, GpBin, 0>(),
   BinAnd = Ampersand,
-  BinOr = define<CsOperator, GpBin | GpBinary, 1>(),
-  BinXor = define<CsOperator, GpBin | GpBinary, 2>(),
-  BinShiftL = define<CsOperator, GpBin | GpBinary, 3>(),
-  BinShiftR = define<CsOperator, GpBin | GpBinary, 4>(),
+  BinOr = define<CsOperator, GpBin | GpBinary, 0>(),
+  BinXor = define<CsOperator, GpBin | GpBinary, 1>(),
+  BinShiftL = define<CsOperator, GpBin | GpBinary, 2>(),
+  BinShiftR = define<CsOperator, GpBin | GpBinary, 3>(),
   Equal = define<CsOperator, GpCompare | GpBinary, 0>(),
   NotEq = define<CsOperator, GpCompare | GpBinary, 1>(),
   Less = define<CsOperator, GpCompare | GpBinary, 2>(),
@@ -171,13 +163,7 @@ constexpr auto trait_name(u32 trait) -> std::string_view {
   case End: return "End";
   case CommentSL: return "CommentSL";
   case CommentML: return "CommentML";
-  case HsDefine: return "HsDefine";
-  case HsUndef: return "HsUndef";
-  case HsIf: return "HsIf";
-  case HsElse: return "HsElse";
-  case HsEndif: return "HsEndif";
-  case HsIfdef: return "HsIfdef";
-  case HsIfndef: return "HsIfndef";
+  case Hash: return "Hash";
   case Sizeof: return "Sizeof";
   case Star: return "Star";
   case Ampersand: return "Ampersand";
@@ -231,7 +217,6 @@ constexpr auto trait_name(u32 trait) -> std::string_view {
   case Or: return "Or";
   case Add: return "Add";
   case Sub: return "Sub";
-  case Mul: return "Mul";
   case Div: return "Div";
   case Mod: return "Mod";
   case BinNot: return "BinNot";
