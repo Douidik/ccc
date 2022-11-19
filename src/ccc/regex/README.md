@@ -52,20 +52,20 @@
 ```
 
 ### Or
-![Or Graph](/docs/or_graph.svg)
+![Or Graph](/docs/graph_or.svg)
 
 
 ### Quest
-![Quest Graph](/docs/quest_graph.svg)
+![Quest Graph](/docs/graph_quest.svg)
 
 
 ### Star
-![Star Graph](/docs/star_graph.svg)
+![Star Graph](/docs/graph_star.svg)
 
 
 ### Plus
-![Plus Graph](/docs/plus_graph.svg)
+![Plus Graph](/docs/graph_plus.svg)
 
 
 ### Wave
-![Wave Graph](/docs/wave_graph.svg)
+![Wave Graph](/docs/graph_wave.svg)
