@@ -11,14 +11,14 @@ namespace ccc::trait {
 // Trait Layout
 // C: Class bit
 // G: Group bit
-// T: N bit
-// Each trait is 32 bits long {Class: 6 bits, Group: 14 bits, N: 12 bits}
-// C|C|C|C|C|C|G|G|G|G|G|G|G|G|G|G|G|G|G|N|N|N|N|N|N|N|N|N|N|N|N|N
-
+// N: Disriminant bit
+// Each trait is 32 bits long {Class: 7 bits, Group: 11 bits, N: 14 bits}
+// C|C|C|C|C|C|C|G|G|G|G|G|G|G|G|G|G|G|N|N|N|N|N|N|N|N|N|N|N|N|N|N
+  
 constexpr u32 TRAIT_SIZE = 32;
-constexpr u32 CLASS_SIZE = 6;
-constexpr u32 GROUP_SIZE = 14;
-constexpr u32 N_SIZE = 12;
+constexpr u32 CLASS_SIZE = 7;
+constexpr u32 GROUP_SIZE = 11;
+constexpr u32 N_SIZE = 14;
 
 static_assert(CLASS_SIZE + GROUP_SIZE + N_SIZE == TRAIT_SIZE);
 
@@ -42,37 +42,38 @@ constexpr auto define() -> u32 {
 
 enum TraitEnum : u32 {
   CsNone = 0,
+
   CsMeta = define_class<0>(),
   CsKeyword = define_class<1>(),
-  CsOperator = define_class<2>(),
-  CsBracket = define_class<3>(),
-  CsData = define_class<4>(),
+  CsIdentifier = define_class<2>(),
+  CsConstant = define_class<3>(),
+  CsString = define_class<4>(),
+  CsOperator = define_class<5>(),
+  CsPunctuator = define_class<6>(),
 
   GpNone = 0,
-  GpNpc = define_group<0>(),
-  GpComment = define_group<1>(),
-  GpDefine = define_group<2>(),
-  GpFlow = define_group<3>(),
-  GpType = define_group<4>(),
-  GpModifier = define_group<5>(),
-  GpArithmetic = define_group<6>(),
-  GpLogic = define_group<7>(),
-  GpCompare = define_group<8>(),
-  GpAccess = define_group<9>(),
-  GpBin = define_group<10>(),
-  GpBinary = define_group<11>(),
-  GpConstant = define_group<12>(),
-
-  None = define<CsMeta, GpNpc, 0>(),
-  Blank = define<CsMeta, GpNpc, 1>(),
-  End = define<CsMeta, GpNpc, 2>(),
-  CommentSL = define<CsMeta, GpComment, 0>(),
-  CommentML = define<CsMeta, GpComment, 1>(),
-  Hash = define<CsMeta, GpNone, 0>(),
+  GpDefine = define_group<0>(),
+  GpFlow = define_group<1>(),
+  GpType = define_group<2>(),
+  GpModifier = define_group<3>(),
+  GpArithmetic = define_group<4>(),
+  GpLogic = define_group<5>(),
+  GpCompare = define_group<6>(),
+  GpAccess = define_group<7>(),
+  GpBin = define_group<8>(),
+  GpBinaryOp = define_group<9>(),
+  GpBracket = define_group<10>(),
+  
+  None = define<CsMeta, GpNone, 0>(),
+  Blank = define<CsMeta, GpNone, 1>(),
+  End = define<CsMeta, GpNone, 2>(),
+  CommentSL = define<CsMeta, GpNone, 3>(),
+  CommentML = define<CsMeta, GpNone, 4>(),
+  Directive = define<CsMeta, GpNone, 5>(),
   
   Sizeof = define<CsKeyword | CsOperator, GpAccess, 0>(),
-  Star = define<CsOperator | CsKeyword, GpAccess | GpModifier | GpArithmetic | GpBinary, 0>(),
-  Ampersand = define<CsOperator, GpAccess | GpBin | GpBinary, 0>(),
+  Star = define<CsOperator | CsKeyword, GpAccess | GpModifier | GpArithmetic | GpBinaryOp, 0>(),
+  Ampersand = define<CsOperator, GpAccess | GpBin | GpBinaryOp, 0>(),
 
   KwAuto = define<CsKeyword, GpType, 0>(),
   KwDouble = define<CsKeyword, GpType, 1>(),
@@ -107,42 +108,42 @@ enum TraitEnum : u32 {
   KwSwitch = define<CsKeyword, GpFlow, 10>(),
   KwWhile = define<CsKeyword, GpFlow, 11>(),
 
-  CurlyBegin = define<CsBracket, GpNone, 0>(),
-  CurlyClose = define<CsBracket, GpNone, 1>(),
-  ParenBegin = define<CsBracket, GpNone, 2>(),
-  ParenClose = define<CsBracket, GpNone, 3>(),
-  CrochetBegin = define<CsBracket, GpNone, 4>(),
-  CrochetClose = define<CsBracket, GpNone, 5>(),
-
-  Identifier = define<CsData, GpNone, 0>(),
-  Float = define<CsData, GpConstant, 0>(),
-  Integer = define<CsData, GpConstant, 1>(),
-  String = define<CsData, GpConstant, 2>(),
-  Char = define<CsData, GpConstant, 3>(),
+  Identifier = define<CsIdentifier, GpNone, 0>(),
+  
+  Float = define<CsConstant, GpNone, 0>(),
+  Integer = define<CsConstant, GpNone, 1>(),
+  String = define<CsConstant, GpNone, 2>(),
+  Char = define<CsConstant, GpNone, 3>(),
 
   Increment = define<CsOperator, GpNone, 0>(),
   Decrement = define<CsOperator, GpNone, 1>(),
-  Assign = define<CsOperator, GpBinary, 0>(),
+  CurlyBegin = define<CsOperator, GpBracket, 0>(),
+  CurlyClose = define<CsOperator, GpBracket, 1>(),
+  ParenBegin = define<CsOperator, GpBracket, 2>(),
+  ParenClose = define<CsOperator, GpBracket, 3>(),
+  CrochetBegin = define<CsOperator, GpBracket, 4>(),
+  CrochetClose = define<CsOperator, GpBracket, 5>(),
+  Assign = define<CsOperator, GpBinaryOp, 0>(),
   Not = define<CsOperator, GpLogic, 0>(),
-  And = define<CsOperator, GpLogic | GpBinary, 0>(),
-  Or = define<CsOperator, GpLogic | GpBinary, 1>(),
-  Add = define<CsOperator, GpArithmetic | GpBinary, 0>(),
-  Sub = define<CsOperator, GpArithmetic | GpBinary, 1>(),
+  And = define<CsOperator, GpLogic | GpBinaryOp, 0>(),
+  Or = define<CsOperator, GpLogic | GpBinaryOp, 1>(),
+  Add = define<CsOperator, GpArithmetic | GpBinaryOp, 0>(),
+  Sub = define<CsOperator, GpArithmetic | GpBinaryOp, 1>(),
   Mul = Star,
-  Div = define<CsOperator, GpArithmetic | GpBinary, 2>(),
-  Mod = define<CsOperator, GpArithmetic | GpBinary, 3>(),
+  Div = define<CsOperator, GpArithmetic | GpBinaryOp, 2>(),
+  Mod = define<CsOperator, GpArithmetic | GpBinaryOp, 3>(),
   BinNot = define<CsOperator, GpBin, 0>(),
   BinAnd = Ampersand,
-  BinOr = define<CsOperator, GpBin | GpBinary, 0>(),
-  BinXor = define<CsOperator, GpBin | GpBinary, 1>(),
-  BinShiftL = define<CsOperator, GpBin | GpBinary, 2>(),
-  BinShiftR = define<CsOperator, GpBin | GpBinary, 3>(),
-  Equal = define<CsOperator, GpCompare | GpBinary, 0>(),
-  NotEq = define<CsOperator, GpCompare | GpBinary, 1>(),
-  Less = define<CsOperator, GpCompare | GpBinary, 2>(),
-  Greater = define<CsOperator, GpCompare | GpBinary, 3>(),
-  LessEq = define<CsOperator, GpCompare | GpBinary, 4>(),
-  GreaterEq = define<CsOperator, GpCompare | GpBinary, 5>(),
+  BinOr = define<CsOperator, GpBin | GpBinaryOp, 0>(),
+  BinXor = define<CsOperator, GpBin | GpBinaryOp, 1>(),
+  BinShiftL = define<CsOperator, GpBin | GpBinaryOp, 2>(),
+  BinShiftR = define<CsOperator, GpBin | GpBinaryOp, 3>(),
+  Equal = define<CsOperator, GpCompare | GpBinaryOp, 0>(),
+  NotEq = define<CsOperator, GpCompare | GpBinaryOp, 1>(),
+  Less = define<CsOperator, GpCompare | GpBinaryOp, 2>(),
+  Greater = define<CsOperator, GpCompare | GpBinaryOp, 3>(),
+  LessEq = define<CsOperator, GpCompare | GpBinaryOp, 4>(),
+  GreaterEq = define<CsOperator, GpCompare | GpBinaryOp, 5>(),
   Deref = Star,
   Address = Ampersand,
   Dot = define<CsOperator, GpAccess, 1>(),
@@ -163,7 +164,7 @@ constexpr auto trait_name(u32 trait) -> std::string_view {
   case End: return "End";
   case CommentSL: return "CommentSL";
   case CommentML: return "CommentML";
-  case Hash: return "Hash";
+  case Directive: return "Directive";
   case Sizeof: return "Sizeof";
   case Star: return "Star";
   case Ampersand: return "Ampersand";

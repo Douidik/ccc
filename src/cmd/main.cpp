@@ -106,12 +106,6 @@ auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
 #include <fstream>
 
 int main(int argc, char **argv) {
-  // Lexer lexer {source};
-  // fmt::print("Lexer tokenized #{} tokens from source\n", print_tokens(lexer));
-
-  fmt::print("{}\n", Graphviz {"'a'|'b'"_rx}.document());
-  fmt::print("{}\n", Graphviz {"'abc'?"_rx}.document());
-  fmt::print("{}\n", Graphviz {"'abc'*"_rx}.document());
-  fmt::print("{}\n", Graphviz {"'abc'+"_rx}.document());
-  fmt::print("{}\n", Graphviz {"'a'~'b'"_rx}.document());
+  Lexer lexer {source, syntax_ansi()};
+  fmt::print("Lexer tokenized #{} tokens from source\n", print_tokens(lexer));
 }

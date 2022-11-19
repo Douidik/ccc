@@ -1,6 +1,8 @@
 #include "lexer.hpp"
 #include "lexer_exception.hpp"
 
+// TODO ! Support different syntaxes
+
 namespace ccc {
 using namespace trait;
 
