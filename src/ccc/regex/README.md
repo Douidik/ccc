@@ -1,6 +1,6 @@
 # Regex System :abc:
 
-**WARNING !** ccc regex implementation **don't** follow the standard regex.
+**WARNING !** The implementation of the ccc regex system does not match the standard regex specifications.
 ## Syntax:
 | Token        | Name         | Description                                  |
 |--------------|--------------|----------------------------------------------|
