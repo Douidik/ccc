@@ -3,7 +3,7 @@
 #include <map>
 
 namespace ccc::regex {
-constexpr size_t AUTOMATA_CAPACITY = 64;
+constexpr size_t AUTOMATA_CAPACITY = 128;
 
 Automata::Automata() :
   m_size(0),

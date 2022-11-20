@@ -8,7 +8,7 @@ using enum Type;
 Parser::Parser(std::string_view source) : m_source(source) {}
 
 auto Parser::parse() -> Automata {
-  for (m_token = m_source.begin(); m_token != m_source.end(); m_token++) {
+  for (m_token = m_source.begin(); m_token < m_source.end(); m_token++) {
     parse_new_token();
   }
 
@@ -47,12 +47,12 @@ auto Parser::sequence_source() -> std::string_view {
 auto Parser::parse_new_token() -> size_t {
   size_t base_size = m_stack.size();
 
-  if (m_token >= m_source.end()) {
+  if (m_token == m_source.end()) {
     return 0;
   }
 
   switch (*m_token) {
-  case ' ': m_token++, parse_new_token(); break;
+  case ' ': return m_token++, parse_new_token();
 
   case '_': parse_range("\n \v\b\f\t"); break;
   case 'a': parse_range("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"); break;

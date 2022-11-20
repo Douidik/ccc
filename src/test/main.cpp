@@ -1,5 +1,7 @@
-#include "lexer.hpp"
 #include "regex.hpp"
+//
+#include "lexer.hpp"
+//
 #include <gtest/gtest.h>
 
 using namespace ccc;

@@ -12,6 +12,7 @@ using namespace regex::literals;
 using SyntaxMap = std::span<const std::pair<u32, Regex>>;
 
 static auto syntax_ansi() -> SyntaxMap {
+  
   static const std::pair<u32, Regex> map[] {
     {Blank, "{_|'@'}+"_rx},
     {CommentSL, "'//' ~ '\n'"_rx},
@@ -77,8 +78,9 @@ static auto syntax_ansi() -> SyntaxMap {
       " {'+' | '-'}*"
       " {'0b' {{'0'|'1'}+ '.' {'0'|'1'}*} | {{'0'|'1'}+ '.' {'0'|'1'}*}} |"
       " {'0x' {{ a | n }+ '.' { a | n }*} | {{ a | n }+ '.' { a | n }*}} |"
-      " {     {{   n   }+ '.' {   n   }*} | {{   n   }+ '.' {   n   }*}} |"
-      "{{'e'|'E'} {'-'|'+'}? n+"
+      " {     {{   n   }+ '.' {   n   }*} | {{   n   }+ '.' {   n   }*}}  "
+      
+      "{{'e'|'E'} {'-'|'+'}? n+}?"
       "a?"_rx,
     },
 
@@ -115,7 +117,7 @@ static auto syntax_ansi() -> SyntaxMap {
     {None, "{~/_}"_rx},
   };
 
-  return map;
+  return {map};
 }
 
 static auto syntax_directives() -> SyntaxMap {

@@ -1,6 +1,7 @@
 #include "lexical/lexer.hpp"
 #include "lexical/lexer_exception.hpp"
 #include "regex/graphviz.hpp"
+#include "regex/parser_exception.hpp"
 #include "regex/regex.hpp"
 #include <fmt/format.h>
 #include <iostream>
@@ -84,7 +85,7 @@ int unpack_file(const char* input_file) {
 namespace ccc {
 
 auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
-  Token token {};
+  Token token{};
 
   try {
     token = lexer.tokenize();
@@ -101,7 +102,7 @@ auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
   return print_tokens(lexer, count + 1);
 }
 
-}  // namespace ccc
+} // namespace ccc
 
 #include <fstream>
 
