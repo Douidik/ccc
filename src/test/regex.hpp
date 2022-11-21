@@ -6,7 +6,6 @@
 #include <gtest/gtest.h>
 
 namespace ccc::regex {
-
 using namespace literals;
 
 constexpr std::string_view LOREM_IPSUM = R"(

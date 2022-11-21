@@ -12,12 +12,13 @@ using namespace regex::literals;
 using SyntaxMap = std::span<const std::pair<u32, Regex>>;
 
 static auto syntax_ansi() -> SyntaxMap {
-  
   static const std::pair<u32, Regex> map[] {
     {Blank, "{_|'@'}+"_rx},
     {CommentSL, "'//' ~ '\n'"_rx},
     {CommentML, "'/*' ~ '*/'"_rx},
-    {Directive, "'#' {~ '\\'}* ~ '\n'"_rx},
+    {BadComment, "'/*'"_rx},
+    {Directive, "'#' {~ {{'\n'!} | '\\\n'}}+"_rx},
+    // {Directive, "'#' {{~ '\\'}+ {~ '\n'}} | {~ '\n'}"_rx},
 
     {Sizeof, "'sizeof' / {o|_}"_rx},
     {Star, "'*'"_rx},
@@ -79,15 +80,16 @@ static auto syntax_ansi() -> SyntaxMap {
       " {'0b' {{'0'|'1'}+ '.' {'0'|'1'}*} | {{'0'|'1'}+ '.' {'0'|'1'}*}} |"
       " {'0x' {{ a | n }+ '.' { a | n }*} | {{ a | n }+ '.' { a | n }*}} |"
       " {     {{   n   }+ '.' {   n   }*} | {{   n   }+ '.' {   n   }*}}  "
-      
       "{{'e'|'E'} {'-'|'+'}? n+}?"
       "a?"_rx,
     },
 
     {Identifier, "{a|'_'} {a|'_'|n}*"_rx},
     {Integer, " {'+'|'-'}* n+"_rx},
-    {String, "Q ~ {'\n' | Q}"_rx},
+    {String, "'L'? {Q ~ Q}"_rx},
+    {BadString, "'L'? Q"_rx},
     {Char, "'L'? {q ~ q}"_rx},
+    {BadChar, "'L'? q"_rx},
 
     {Semicolon, "';'"_rx},
     {Comma, "','"_rx},

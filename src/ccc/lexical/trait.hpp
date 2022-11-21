@@ -12,13 +12,13 @@ namespace ccc::trait {
 // C: Class bit
 // G: Group bit
 // N: Disriminant bit
-// Each trait is 32 bits long {Class: 7 bits, Group: 11 bits, N: 14 bits}
-// C|C|C|C|C|C|C|G|G|G|G|G|G|G|G|G|G|G|N|N|N|N|N|N|N|N|N|N|N|N|N|N
-  
+// Each trait is 32 bits long {Class: 8 bits, Group: 11 bits, N: 13 bits}
+// C|C|C|C|C|C|C|C|G|G|G|G|G|G|G|G|G|G|G|N|N|N|N|N|N|N|N|N|N|N|N|N
+
 constexpr u32 TRAIT_SIZE = 32;
-constexpr u32 CLASS_SIZE = 7;
+constexpr u32 CLASS_SIZE = 8;
 constexpr u32 GROUP_SIZE = 11;
-constexpr u32 N_SIZE = 14;
+constexpr u32 N_SIZE = 13;
 
 static_assert(CLASS_SIZE + GROUP_SIZE + N_SIZE == TRAIT_SIZE);
 
@@ -36,8 +36,7 @@ constexpr auto define_group() -> u32 {
 
 template<u32 C, u32 G, u32 N>
 constexpr auto define() -> u32 {
-  static_assert(N < N_SIZE);
-  return 1 << (TRAIT_SIZE - CLASS_SIZE - GROUP_SIZE - N_SIZE + N) | C | G;
+  return N | C | G;
 }
 
 enum TraitEnum : u32 {
@@ -50,6 +49,7 @@ enum TraitEnum : u32 {
   CsString = define_class<4>(),
   CsOperator = define_class<5>(),
   CsPunctuator = define_class<6>(),
+  CsCatch = define_class<7>(),
 
   GpNone = 0,
   GpDefine = define_group<0>(),
@@ -63,16 +63,15 @@ enum TraitEnum : u32 {
   GpBin = define_group<8>(),
   GpBinaryOp = define_group<9>(),
   GpBracket = define_group<10>(),
-  
-  None = define<CsMeta, GpNone, 0>(),
+
   Blank = define<CsMeta, GpNone, 1>(),
   End = define<CsMeta, GpNone, 2>(),
   CommentSL = define<CsMeta, GpNone, 3>(),
   CommentML = define<CsMeta, GpNone, 4>(),
   Directive = define<CsMeta, GpNone, 5>(),
-  
+
   Sizeof = define<CsKeyword | CsOperator, GpAccess, 0>(),
-  Star = define<CsOperator | CsKeyword, GpAccess | GpModifier | GpArithmetic | GpBinaryOp, 0>(),
+  Star = define<CsPunctuator | CsKeyword, GpAccess | GpModifier | GpArithmetic | GpBinaryOp, 0>(),
   Ampersand = define<CsOperator, GpAccess | GpBin | GpBinaryOp, 0>(),
 
   KwAuto = define<CsKeyword, GpType, 0>(),
@@ -109,7 +108,7 @@ enum TraitEnum : u32 {
   KwWhile = define<CsKeyword, GpFlow, 11>(),
 
   Identifier = define<CsIdentifier, GpNone, 0>(),
-  
+
   Float = define<CsConstant, GpNone, 0>(),
   Integer = define<CsConstant, GpNone, 1>(),
   String = define<CsConstant, GpNone, 2>(),
@@ -148,8 +147,13 @@ enum TraitEnum : u32 {
   Address = Ampersand,
   Dot = define<CsOperator, GpAccess, 1>(),
   Arrow = define<CsOperator, GpAccess, 2>(),
-  Semicolon = define<CsOperator, None, 0>(),
-  Comma = define<CsOperator, None, 1>(),
+  Semicolon = define<CsPunctuator, GpNone, 3>(),
+  Comma = define<CsPunctuator, GpNone, 1>(),
+
+  None = define<CsMeta | CsCatch, GpNone, 0>(),
+  BadComment = define<CsMeta | CsCatch, None, 1>(),
+  BadString = define<CsMeta | CsCatch, CsConstant, 0>(),
+  BadChar = define<CsMeta | CsCatch, CsConstant, 1>(),
 };
 
 }  // namespace ccc::trait
@@ -159,7 +163,6 @@ using namespace trait;
 
 constexpr auto trait_name(u32 trait) -> std::string_view {
   switch (trait) {
-  case None: return "None";
   case Blank: return "Blank";
   case End: return "End";
   case CommentSL: return "CommentSL";
@@ -235,6 +238,21 @@ constexpr auto trait_name(u32 trait) -> std::string_view {
   case Arrow: return "Arrow";
   case Semicolon: return "Semicolon";
   case Comma: return "Comma";
+  case None: return "None";
+  case BadComment: return "BadComment";
+  case BadString: return "BadString";
+  case BadChar: return "BadChar";
+  }
+
+  return "?";
+}
+
+constexpr auto trait_catch_description(u32 trait) -> std::string_view {
+  switch (trait) {
+  case None: return "Token not recognized";
+  case BadComment: return "Umatched comment delimiter, missing <*/> ending delimiter";
+  case BadString: return "Umatched string delimiter, missing <\"> ending delimiter";
+  case BadChar: return "Umatched char delimiter, missing <'> ending delimiter";
   }
 
   return "?";

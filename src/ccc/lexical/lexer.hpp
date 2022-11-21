@@ -1,14 +1,14 @@
 #ifndef CCC_LEXER_HPP
 #define CCC_LEXER_HPP
 
-#include "token.hpp"
 #include "syntax_map.hpp"
+#include "token.hpp"
 
 namespace ccc {
 
 class Lexer {
 public:
-  Lexer(std::string_view source, SyntaxMap map);
+  Lexer(std::string_view source, SyntaxMap map = syntax_ansi());
   auto tokenize() -> Token;
 
 private:

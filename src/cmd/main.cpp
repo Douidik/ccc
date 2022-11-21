@@ -85,7 +85,7 @@ int unpack_file(const char* input_file) {
 namespace ccc {
 
 auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
-  Token token{};
+  Token token {};
 
   try {
     token = lexer.tokenize();
@@ -102,11 +102,20 @@ auto print_tokens(Lexer &lexer, size_t count = 0) -> size_t {
   return print_tokens(lexer, count + 1);
 }
 
-} // namespace ccc
+}  // namespace ccc
 
 #include <fstream>
 
 int main(int argc, char **argv) {
-  Lexer lexer {source, syntax_ansi()};
-  fmt::print("Lexer tokenized #{} tokens from source\n", print_tokens(lexer));
+  if (argc > 2) {
+    Regex regex {argv[1]};
+    Match match = regex.match(argv[2]);
+
+    fmt::print("\"{}\" matched '{}' of '{}'\n", regex.source(), match.view(), match.expression());
+    fmt::print("{}\n", Graphviz(regex).document());
+  }
+  
+  // std::cout << Graphviz("'#' {^* {{'\n'!} | '\\\n'}}+"_rx).document() << std::endl;
+  // Lexer lexer {source, syntax_ansi()};
+  // fmt::print("Lexer tokenized #{} tokens from source\n", print_tokens(lexer));
 }

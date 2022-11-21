@@ -7,8 +7,9 @@ constexpr std::string_view CREDITS =
   R"(# Regex Graph generated with: https://github.com/douidik/ccc
 # <?> Error
 # <$> Epsilon state
-# </> Dash state
 # <^> Any state
+# </> Dash state
+# <!> Return state
 # '...' Text
 # [a..b] Range
 
@@ -43,8 +44,8 @@ void Graphviz::write_graph() {
 
 void Graphviz::write_start() {
   write("  rankdir = LR;\n");
-  write("  \"{}\" [shape = none];\n", FmtEscaped {m_name});
-  write("  \"{}\" -> 0 [label = \"{}\"];\n", FmtEscaped {m_name}, automata().root()->state());
+  write("  \"{}\" [shape = none];\n", FmtEscaped {m_name, 1});
+  write("  \"{}\" -> 0 [label = \"{}\"];\n", FmtEscaped {m_name, 1}, automata().root()->state());
 }
 
 void Graphviz::write_attributes() {
